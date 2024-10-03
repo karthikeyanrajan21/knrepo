@@ -13,24 +13,21 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      # Selenium service using a Chrome browser
       selenium:
         image: selenium/standalone-chrome:latest
         ports:
           - 4444:4444
 
     steps:
-      # Step 1: Checkout the repository code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up JDK (Java Development Kit)
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
+          distribution: 'temurin'  # or 'adopt'
           java-version: '11'
 
-      # Step 3: Cache Maven dependencies
       - name: Cache Maven dependencies
         uses: actions/cache@v2
         with:
@@ -39,9 +36,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Step 4: Install dependencies and run tests
       - name: Run Maven tests
         env:
-          # Selenium WebDriver URL, which the test will use
           SELENIUM_REMOTE_URL: http://localhost:4444/wd/hub
         run: mvn test
